@@ -21,5 +21,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Weasel"
+rootProject.name = "RESOL"
 include(":app")

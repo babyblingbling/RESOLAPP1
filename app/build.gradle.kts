@@ -10,11 +10,11 @@ ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
 }
 android {
-    namespace = "com.example.weasel"
+    namespace = "com.example.resol"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.weasel"
+        applicationId = "com.example.resol"
         minSdk = 25
         targetSdk = 35
         versionCode = 1
