@@ -1,4 +1,4 @@
-package com.example.weasel.data
+package com.example.resol.data
 
 data class Artist(
     val id: String,

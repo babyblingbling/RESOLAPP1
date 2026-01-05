@@ -1,18 +1,26 @@
 package com.example.resol.data.local
 
 import androidx.room.*
-import com.example.resol.data.*
-import kotlinx.coroutines.flow.Flow
+// Import này sẽ hoạt động sau khi bạn làm BƯỚC 1
+import com.example.resol.data.* import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MusicDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addTrackToHistory(historyTrack: HistoryTrack)
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addTracksToPlaylist(crossRefs: List<PlaylistTrackCrossRef>)
 
-    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT *, history.playedAt FROM tracks INNER JOIN history ON tracks.id = history.trackId ORDER BY history.playedAt DESC LIMIT 50")
+    // Query tối ưu tránh lỗi trùng lặp cột ID
+    @Transaction
+    @Query("""
+        SELECT tracks.*, history.playedAt, history.trackId 
+        FROM tracks 
+        INNER JOIN history ON tracks.id = history.trackId 
+        ORDER BY history.playedAt DESC 
+        LIMIT 50
+    """)
     fun getHistoryWithTimestamp(): Flow<List<HistoryEntry>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -29,11 +37,13 @@ interface MusicDao {
 
     @Query("SELECT * FROM playlists WHERE name = :name LIMIT 1")
     suspend fun getPlaylistByName(name: String): Playlist?
+
     @Update
     suspend fun updatePlaylist(playlist: Playlist)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTracks(tracks: List<Track>)
+
     @Transaction
     @Query("SELECT * FROM playlists WHERE id = :playlistId")
     fun getPlaylistWithTracks(playlistId: Long): Flow<PlaylistWithTracks>
@@ -51,9 +61,8 @@ interface MusicDao {
     suspend fun updateTrackAsDownloaded(trackId: String, filePath: String)
 }
 
-
 data class HistoryEntry(
     @Embedded val track: Track,
     val playedAt: Long,
-    @ColumnInfo(name = "trackId") val trackId: String?,
+    val trackId: String?
 )

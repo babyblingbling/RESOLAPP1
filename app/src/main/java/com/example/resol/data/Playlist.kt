@@ -1,4 +1,3 @@
-// In: app/src/main/java/com/example/weasel/data/Playlist.kt
 package com.example.resol.data
 
 import androidx.room.Entity

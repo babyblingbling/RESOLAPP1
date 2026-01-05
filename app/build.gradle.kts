@@ -2,9 +2,10 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("com.google.devtools.ksp") version "2.1.20-2.0.1"
+    alias(libs.plugins.ksp)
     id("com.google.gms.google-services")
 }
+
 
 ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
@@ -99,9 +100,10 @@ dependencies {
     implementation("com.github.TeamNewPipe:NewPipeExtractor:v0.24.6")
 
     // --- ROOM DATABASE ---
-    implementation("androidx.room:room-runtime:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
-    ksp("androidx.room:room-compiler:2.6.1")
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+
 
     // --- WORK MANAGER (Tải ngầm) ---
     implementation("androidx.work:work-runtime-ktx:2.10.0")

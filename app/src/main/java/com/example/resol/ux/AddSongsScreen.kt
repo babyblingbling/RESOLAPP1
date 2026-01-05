@@ -1,4 +1,4 @@
-package com.example.weasel.ux
+package com.example.resol.ux
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn

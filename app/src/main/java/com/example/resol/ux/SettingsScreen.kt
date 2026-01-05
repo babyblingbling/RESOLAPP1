@@ -199,7 +199,7 @@ fun SettingsScreen(
             }
 
             item { SettingsLinkSection("Report a Bug", Icons.Default.BugReport) { openUrl(bugReportUrl) } }
-            item { SettingsLinkSection("Review Weasel", Icons.Default.RateReview) { openUrl(reviewUrl) } }
+            item { SettingsLinkSection("Review Resol", Icons.Default.RateReview) { openUrl(reviewUrl) } }
             item { SettingsLinkSection("Suggest a Feature", Icons.Default.Lightbulb) { openUrl(suggestionsUrl) } }
         }
     }
