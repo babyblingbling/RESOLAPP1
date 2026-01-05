@@ -96,7 +96,7 @@ private fun SkeletonItem(modifier: Modifier) {
 }
 
 @Composable
-private fun SkeletonArtistCard() {
+internal fun SkeletonArtistCard() {
     Column(
         modifier = Modifier.width(80.dp),
         horizontalAlignment = Alignment.CenterHorizontally,

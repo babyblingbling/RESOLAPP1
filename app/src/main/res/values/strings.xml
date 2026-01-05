@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">RESOL</string>
+    <string name="trending_now">Trending Now</string>
+    <string name="top_artists">Top Artists</string>
+    <string name="recently_played">Recently Played</string>
+    <string name="quick_picks">Quick Picks</string>
+    <string name="made_for_you">Made For You</string>
+    <string name="offline_message">You are offline. Only downloaded songs and local music are available.</string>
+
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="library">Library</string>
+    <string name="settings">Settings</string>
+    <string name="back">Back</string>
+    <string name="add_songs">Add Songs</string>
+    <string name="add_n_songs">Add %1$d Songs</string>
 </resources>

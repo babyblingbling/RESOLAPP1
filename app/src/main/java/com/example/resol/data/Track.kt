@@ -13,4 +13,7 @@ data class Track(
     @ColumnInfo(defaultValue = "0")
     val isDownloaded: Boolean = false,
     val localPath: String? = null
-)
+) {
+    val uploader: String
+        get() = ""
+}

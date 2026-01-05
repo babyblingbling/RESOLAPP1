@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">RESOL</string>
+    <string name="trending_now">Thịnh hành</string>
+    <string name="top_artists">Nghệ sĩ hàng đầu</string>
+    <string name="recently_played">Nghe gần đây</string>
+    <string name="quick_picks">Chọn nhanh cho bạn</string>
+    <string name="made_for_you">Dành riêng cho bạn</string>
+    <string name="offline_message">Bạn đang ngoại tuyến. Chỉ có nhạc tải về và nhạc trong máy.</string>
+
+    <string name="home">Trang chủ</string>
+    <string name="search">Tìm kiếm</string>
+    <string name="library">Thư viện</string>
+    <string name="settings">Cài đặt</string>
+    <string name="back">Quay lại</string>
+    <string name="add_songs">Thêm bài hát</string>
+    <string name="add_n_songs">Thêm %1$d bài hát</string>
+</resources>

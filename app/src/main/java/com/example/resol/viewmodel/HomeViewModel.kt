@@ -1,4 +1,3 @@
-
 package com.example.resol.viewmodel
 
 import androidx.compose.runtime.getValue
@@ -6,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.resol.data.Artist
 import com.example.resol.data.Track
 import com.example.resol.repository.NewPipeMusicRepository
 import com.example.resol.util.AppConnectivityManager
@@ -20,7 +20,8 @@ sealed class HomeUiState {
     data class Success(
         val popularThisWeek: List<Track>,
         val topSongsGlobal: List<Track>,
-        val newReleases: List<Track>
+        val newReleases: List<Track>,
+        val trendingArtists: List<Artist> // <--- BẮT BUỘC CÓ DÒNG NÀY
     ) : HomeUiState()
     data class Error(val message: String) : HomeUiState()
 }
@@ -43,29 +44,40 @@ class HomeViewModel(
     fun loadHomeData() {
         viewModelScope.launch {
             if (!isOnline.value) {
-                uiState = HomeUiState.Error("You are offline. Please check your connection.")
-                return@launch
+                // Xử lý khi offline (tùy chọn)
             }
-
             uiState = HomeUiState.Loading
 
             try {
-                val trendingDeferred = async { musicRepository.getTrendingTracks("PK", 20) }
-                val topSongsDeferred = async { musicRepository.searchMusic("Top 50 Global playlist") }
-                val newReleasesDeferred = async { musicRepository.searchMusic("New Music Friday playlist") }
+                // Lấy nhạc (VN)
+                val trendingDeferred = async { musicRepository.getTrendingTracks("VN", 20) }
+                val topSongsDeferred = async { musicRepository.searchMusic("Top 50 Global") }
+                val newReleasesDeferred = async { musicRepository.searchMusic("New Music Friday") }
 
-                val trendingResult = trendingDeferred.await()
-                val topSongsResult = topSongsDeferred.await()
-                val newReleasesResult = newReleasesDeferred.await()
+                val trendingResult = trendingDeferred.await().getOrNull() ?: emptyList()
+                val topSongsResult = topSongsDeferred.await().getOrNull() ?: emptyList()
+                val newReleasesResult = newReleasesDeferred.await().getOrNull() ?: emptyList()
+
+                // Logic: Tách Ca sĩ từ danh sách bài hát
+                val extractedArtists = trendingResult
+                    .map { track ->
+                        Artist(
+                            id = track.uploader,
+                            name = track.artist,
+                            imageUrl = track.thumbnailUrl
+                        )
+                    }
+                    .distinctBy { it.name }
+                    .take(10)
 
                 uiState = HomeUiState.Success(
-                    popularThisWeek = trendingResult.getOrNull()?.take(10) ?: emptyList(),
-                    topSongsGlobal = topSongsResult.getOrNull()?.take(5) ?: emptyList(),
-                    newReleases = newReleasesResult.getOrNull()?.take(4) ?: emptyList()
+                    popularThisWeek = trendingResult,
+                    topSongsGlobal = topSongsResult,
+                    newReleases = newReleasesResult,
+                    trendingArtists = extractedArtists // <--- Truyền dữ liệu vào đây
                 )
-
             } catch (e: Exception) {
-                uiState = HomeUiState.Error("Failed to load content: ${e.message}")
+                uiState = HomeUiState.Error("Lỗi: ${e.message}")
             }
         }
     }

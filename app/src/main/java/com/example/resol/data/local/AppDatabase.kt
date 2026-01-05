@@ -28,9 +28,10 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "resol_database" // Tên database mới
+                    "resol_database"
                 )
-                    // Nếu bạn muốn xóa dữ liệu cũ khi lỗi migration, hãy bỏ comment dòng dưới:
+                    // KHUYÊN DÙNG: Bỏ comment dòng này để tránh crash nếu migration lỗi
+                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance
