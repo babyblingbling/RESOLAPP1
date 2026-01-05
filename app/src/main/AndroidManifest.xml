@@ -18,7 +18,7 @@
 
 
     <application
-        android:name=".WeaselApplication"
+        android:name=".ResolApplication"
         android:allowBackup="true"
         android:enableOnBackInvokedCallback="true"
         android:dataExtractionRules="@xml/data_extraction_rules"

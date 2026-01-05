@@ -4,24 +4,30 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp") version "2.1.20-2.0.1"
     id("com.google.gms.google-services")
-
 }
+
 ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
 }
+
 android {
-    namespace = "com.example.resol"
+    namespace = "com.example.weasel" // Giữ nguyên để khớp với package code
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.resol"
-        minSdk = 25
+        applicationId = "com.example.resol" // Đổi thành tên mới RESOL
+        minSdk = 24
         targetSdk = 35
         versionCode = 1
-        versionName = "0.1.2"
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
+        versionName = "1.0"
 
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
+    } // --- KẾT THÚC defaultConfig TẠI ĐÂY ---
+
+    // Các khối dưới đây phải nằm NGOÀI defaultConfig
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -37,10 +43,12 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
+
     lint {
         checkReleaseBuilds = true
         abortOnError = false
     }
+
     kotlinOptions {
         jvmTarget = "17"
     }
@@ -51,87 +59,71 @@ android {
 }
 
 dependencies {
-    // Firebase BoM (để sync version)
-    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))  // Version mới nhất 2025
-
-// Firebase Auth
+    // --- FIREBASE ---
+    // Chỉ dùng 1 phiên bản BOM mới nhất (33.16.0)
+    implementation(platform("com.google.firebase:firebase-bom:33.16.0"))
     implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-database-ktx")
 
-// Nếu dùng Google Sign-In riêng (không qua Firebase)
+    // Google Auth & Coroutines
     implementation("com.google.android.gms:play-services-auth:21.2.0")
-
-// Coroutines cho Firebase tasks
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
-    // Core/KTX
+
+    // --- ANDROID CORE & KTX ---
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7") // Cập nhật version ổn định
+    implementation("androidx.startup:startup-runtime:1.2.0")
+    implementation("androidx.core:core-splashscreen:1.0.1")
 
-    // Compose UI
+    // --- COMPOSE UI ---
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
+    // Icon mở rộng cho trình phát nhạc
+    implementation("androidx.compose.material:material-icons-extended:1.7.6")
 
-    // Accompanist
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.34.0")
-    implementation("androidx.startup:startup-runtime:1.2.0")
+    // --- NAVIGATION ---
+    implementation("androidx.navigation:navigation-compose:2.8.5")
 
-    // NewPipe Extractor
+    // --- MEDIA3 (EXOPLAYER) ---
+    implementation("androidx.media3:media3-exoplayer:1.5.0")
+    implementation("androidx.media3:media3-ui:1.5.0")
+    implementation("androidx.media3:media3-session:1.5.0")
+
+    // --- NEWPIPE EXTRACTOR (Lõi tải nhạc) ---
     implementation("com.github.TeamNewPipe:NewPipeExtractor:v0.24.6")
 
-    // Media3 for audio playback
-    implementation("androidx.media3:media3-exoplayer:1.7.1")
-    implementation("androidx.media3:media3-ui:1.7.1")
-    implementation("androidx.media3:media3-session:1.7.1")
-    implementation("androidx.compose.material:material-icons-extended:1.7.8")
+    // --- ROOM DATABASE ---
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
 
-    implementation("androidx.work:work-runtime-ktx:2.10.2")
+    // --- WORK MANAGER (Tải ngầm) ---
+    implementation("androidx.work:work-runtime-ktx:2.10.0")
 
-    implementation(platform("com.google.firebase:firebase-bom:33.16.0"))
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-database-ktx")
-
-    // Coil image loading
-    implementation("io.coil-kt:coil-compose:2.6.0")
-
-    // Guava
-    implementation("com.google.guava:guava:33.0.0-android")
-
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.1")
-
-    // Navigation support in Compose
-    implementation("androidx.navigation:navigation-compose:2.9.1")
-
-    // Accompanist, NewPipe, Media3, etc…
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.34.0")
-    implementation("com.github.TeamNewPipe:NewPipeExtractor:v0.24.6")
-
-    // Room Database
-    implementation("androidx.room:room-runtime:2.7.2")
-    implementation("androidx.room:room-ktx:2.7.2")
-    ksp("androidx.room:room-compiler:2.7.2")
-
-
+    // --- IMAGES & UTILS ---
+    implementation("io.coil-kt:coil-compose:2.7.0")
     implementation("com.kmpalette:kmpalette-core:3.1.0")
-
-    // SplashScreen
-    implementation("androidx.core:core-splashscreen:1.0.1")
-
-    // WorkManager
+    implementation("com.google.guava:guava:33.3.1-android")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.36.0")
 
     // Networking
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs_nio:2.0.3")
+    // Desugaring (Hỗ trợ Java mới trên Android cũ)
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs_nio:2.0.4")
 
-    // Testing
+    // --- TESTING ---
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 }
