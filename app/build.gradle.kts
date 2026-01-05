@@ -11,7 +11,7 @@ ksp {
 }
 
 android {
-    namespace = "com.example.weasel" // Giữ nguyên để khớp với package code
+    namespace = "com.example.resol" // Giữ nguyên để khớp với package code
     compileSdk = 35
 
     defaultConfig {
